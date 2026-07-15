@@ -3,65 +3,99 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { COMPANY_NAME } from '@/lib/constants'
 
+const SITE_URL = 'https://startechscales.vercel.app'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+
   title: {
+    default: `${COMPANY_NAME} | Industrial Weighing Scales & Solutions`,
     template: `%s | ${COMPANY_NAME}`,
-    default: `${COMPANY_NAME} - Premium Industrial Weighing Scales & Solutions`,
   },
+
   description:
-    'Leading provider of high-precision industrial weighing scales, laboratory instruments, and calibration services. Trusted by pharmaceutical, food, chemical, and manufacturing industries.',
+    'Star Tech Scales is a trusted supplier of industrial weighing scales, laboratory balances, platform scales, weighbridges, calibration services, AMC, and weighing automation solutions across India.',
+
   keywords: [
-    'weighing scales',
-    'industrial scales',
-    'laboratory scales',
-    'precision weighing',
-    'calibration services',
-    'Star Tech Scales',
+    'Industrial Weighing Scales',
+    'Platform Scale',
+    'Bench Scale',
+    'Crane Scale',
+    'Weighbridge',
+    'Laboratory Balance',
+    'Retail Billing Scale',
+    'Load Cell',
+    'Calibration Services',
+    'AMC',
+    'Mumbai',
+    'India',
+    COMPANY_NAME,
   ],
-  authors: [{ name: COMPANY_NAME }],
+
+  authors: [
+    {
+      name: COMPANY_NAME,
+    },
+  ],
+
   creator: COMPANY_NAME,
+
   publisher: COMPANY_NAME,
-  formatDetection: {
-    email: false,
-    telephone: false,
+
+  applicationName: COMPANY_NAME,
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
+
   openGraph: {
     type: 'website',
-    locale: 'en_IN',
-    url: 'https://startechscales.com',
+    url: SITE_URL,
     siteName: COMPANY_NAME,
-    title: `${COMPANY_NAME} - Premium Industrial Weighing Scales`,
-    description: 'Leading provider of high-precision industrial weighing scales and solutions',
+    locale: 'en_IN',
+
+    title: `${COMPANY_NAME} | Premium Industrial Weighing Solutions`,
+
+    description:
+      'Premium Industrial Weighing Scales, Laboratory Balances, Calibration Services and Automation Solutions.',
+
     images: [
       {
-        url: 'https://startechscales.com/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: COMPANY_NAME,
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
-    title: `${COMPANY_NAME} - Premium Industrial Weighing Scales`,
-    description: 'Leading provider of high-precision industrial weighing scales and solutions',
+
+    title: `${COMPANY_NAME} | Premium Industrial Weighing Solutions`,
+
+    description:
+      'Premium Industrial Weighing Scales, Laboratory Balances, Calibration Services and Automation Solutions.',
+
+    images: ['/og-image.png'],
   },
 }
 
@@ -70,11 +104,19 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  colorScheme: 'light dark',
+
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1419' },
+    {
+      media: '(prefers-color-scheme: light)',
+      color: '#ffffff',
+    },
+    {
+      media: '(prefers-color-scheme: dark)',
+      color: '#0f172a',
+    },
   ],
+
+  colorScheme: 'light dark',
 }
 
 export default function RootLayout({
@@ -85,8 +127,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <meta charSet="utf-8" />
-        <link rel="canonical" href="https://startechscales.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -94,14 +134,17 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: COMPANY_NAME,
-              url: 'https://startechscales.com',
+              url: SITE_URL,
+              logo: `${SITE_URL}/og-image.png`,
+              image: `${SITE_URL}/og-image.png`,
               description:
-                'Leading provider of high-precision industrial weighing scales and solutions',
+                'Premium Industrial Weighing Scales, Calibration Services and Weighing Automation Solutions.',
             }),
           }}
         />
       </head>
-      <body className="antialiased bg-background text-foreground">
+
+      <body className="bg-background text-foreground antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
