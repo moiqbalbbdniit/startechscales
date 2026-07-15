@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { COMPANY_NAME } from '@/lib/constants'
 
-const SITE_URL = 'https://startechscales.vercel.app'
+const SITE_URL = 'https://startechscales.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
