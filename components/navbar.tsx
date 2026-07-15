@@ -54,7 +54,7 @@ export function Navbar() {
         {/* Logo */}
 <Link
   href="/"
-  className="flex shrink-0 items-center ml-10"
+  className="flex shrink-0 items-center lg:ml-10"
   aria-label={COMPANY_NAME}
 >
   <Image
