@@ -10,7 +10,7 @@ import { ProductCard } from "@/components/product-card";
 import { CategoriesGrid } from "@/components/categories-grid";
 import { Button } from "@/components/ui/button";
 import { SERVICES, SAMPLE_PRODUCTS, TESTIMONIALS } from "@/lib/constants";
-import { getCategories } from '@/lib/category-store';
+import { getCategories } from "@/lib/category-store";
 import {
   ArrowRight,
   ShieldCheck,
@@ -19,7 +19,7 @@ import {
   StarCheck,
 } from "lucide-react";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Home - Premium Industrial Weighing Scales",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const categories = await getCategories()
+  const categories = await getCategories();
   return (
     <div className="min-h-screen bg-[#f7f4ef] text-slate-950 dark:bg-slate-950 dark:text-white">
       <Navbar />
@@ -41,45 +41,102 @@ export default async function HomePage() {
         <div className="absolute left-[-8rem] top-32 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
         <div className="absolute right-[-8rem] bottom-10 h-72 w-72 rounded-full bg-slate-900/10 blur-3xl dark:bg-white/10" />
 
-        {/* Premium Infinite Marquee */}
-        <div className="relative z-20 w-full border-y border-amber-500/10 bg-white/40 py-3.5 backdrop-blur-md shadow-sm dark:border-amber-500/10 dark:bg-slate-950/40">
-          <div className="flex overflow-hidden whitespace-nowrap">
-            <div className="animate-marquee flex w-max gap-8 px-4 hover:[animation-play-state:paused]">
-              {/* Duplicating the array to create a seamless infinite loop */}
-              {[...categories, ...categories, ...categories, ...categories].map(
-                (category, index) => (
-                  <div
-                    key={`${category.id}-${index}`}
-                    className="group flex cursor-pointer items-center gap-2.5 transition-all"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:shadow-md dark:bg-slate-900 dark:shadow-slate-900/50">
-                      <span className="text-sm">{category.icon}</span>
-                    </div>
-                    <span className="text-sm font-semibold tracking-wide text-slate-700 transition-colors group-hover:text-amber-600 dark:text-slate-300 dark:group-hover:text-amber-500">
-                      {category.name}
-                    </span>
-                    <span className="ml-5 text-slate-300 dark:text-slate-700/80">
-                      •
-                    </span>
-                  </div>
-                ),
-              )}
+       {/* Premium Infinite Marquee */}
+<div className="relative z-20 w-full overflow-hidden border-y border-amber-500/10 bg-white/40 py-3.5 shadow-sm backdrop-blur-md dark:border-amber-500/10 dark:bg-slate-950/40">
+  <div className="marquee-wrapper">
+    <div className="marquee-track">
+      {/* First copy */}
+      <div className="marquee-group">
+        {categories.map((category) => (
+          <div
+            key={`first-${category.id}`}
+            className="group flex shrink-0 cursor-pointer items-center gap-2.5"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:shadow-md dark:bg-slate-900 dark:shadow-slate-900/50">
+              <span className="text-sm">{category.icon}</span>
             </div>
+
+            <span className="text-sm font-semibold tracking-wide text-slate-700 transition-colors group-hover:text-amber-600 dark:text-slate-300 dark:group-hover:text-amber-500">
+              {category.name}
+            </span>
+
+            <span className="mx-5 text-slate-300 dark:text-slate-700/80">
+              •
+            </span>
           </div>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-            @keyframes marquee {
-              0% { transform: translateX(0%); }
-              100% { transform: translateX(-25%); } /* -25% because we duplicated the array 4 times */
-            }
-            .animate-marquee {
-              animation: marquee 25s linear infinite;
-            }
-          `,
-            }}
-          />
-        </div>
+        ))}
+      </div>
+
+      {/* Exact duplicate for seamless loop */}
+      <div className="marquee-group" aria-hidden="true">
+        {categories.map((category) => (
+          <div
+            key={`second-${category.id}`}
+            className="group flex shrink-0 cursor-pointer items-center gap-2.5"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm dark:bg-slate-900">
+              <span className="text-sm">{category.icon}</span>
+            </div>
+
+            <span className="text-sm font-semibold tracking-wide text-slate-700 dark:text-slate-300">
+              {category.name}
+            </span>
+
+            <span className="mx-5 text-slate-300 dark:text-slate-700/80">
+              •
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <style jsx>{`
+    .marquee-wrapper {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 30s linear infinite;
+      will-change: transform;
+    }
+
+    .marquee-group {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .marquee-track {
+        animation-duration: 22s;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track {
+        animation-play-state: paused;
+      }
+    }
+  `}</style>
+</div>
 
         {/* Main Hero Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-8 sm:pt-12 lg:pt-16">
