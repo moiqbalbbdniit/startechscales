@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import type { ComponentProps } from 'react'
 
 export const metadata: Metadata = {
   title: 'Wishlist',
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 }
 
 export default function WishlistPage() {
-  const wishlistItems = []
+  // Wishlist records will be loaded from the backend once the wishlist API is added.
+  // Keeping this typed prevents the empty initial state from becoming implicit `any`.
+  const wishlistItems: ComponentProps<typeof ProductCard>[] = []
 
   return (
     <div className="bg-white dark:bg-slate-950">
@@ -37,7 +40,7 @@ export default function WishlistPage() {
             <p className="text-slate-600 dark:text-slate-400 mb-6">
               Start adding items to your wishlist
             </p>
-            <Link href="/products">
+            <Link href="/store/products">
               <Button className="bg-primary hover:bg-primary/90 text-white">
                 Browse Products <ArrowRight size={16} className="ml-2" />
               </Button>

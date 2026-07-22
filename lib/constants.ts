@@ -45,13 +45,13 @@ export const FOOTER_LINKS = {
 
 // Product Categories
 export const CATEGORIES = [
-  { id: 1, name: 'All Products', icon: '⚖️', image: '/productimages/industrialscales.png', description: 'Browse all weighing solutions' },
-  { id: 2, name: 'Industrial Scales', icon: '🏭', image: '/productimages/industrialscales.png', description: 'Heavy-duty industrial equipment' },
-  { id: 3, name: 'Weighing Bridges & Items', icon: '🌉', image: '/productimages/WeighBridge.jpeg', description: 'Precision weighing bridges' },
-  { id: 4, name: 'Loadcells', icon: '📊', image: '/productimages/loadcells.png', description: 'Load cell measurement sensors' },
-  { id: 5, name: 'Personal Scales & Items', icon: '⚖️', image: '/productimages/personalscalesanditem.avif', description: 'Personal weighing devices' },
+  { id: 1, name: 'All Products', icon: '⚖️', image: '/productimages/product1.jfif', description: 'Complete range of certified weighing equipment' },
+  { id: 2, name: 'Industrial Scales', icon: '🏭', image: '/productimages/industrialscales.png', description: 'Platform scales, floor scales and industrial weighing systems' },
+  { id: 3, name: 'Weighing Bridges & Items', icon: '🌉', image: '/productimages/WeighBridge.jpeg', description: 'Truck scales and weighbridge systems for heavy vehicles' },
+  { id: 4, name: 'Loadcells', icon: '📊', image: '/productimages/loadcells.png', description: 'High-accuracy load cells for industrial applications' },
+  { id: 5, name: 'Personal Scales & Items', icon: '⚖️', image: '/productimages/personalscalesanditem.avif', description: 'Digital body, retail and commercial weighing scales' },
   { id: 6, name: 'Lab Scales', icon: '🔬', image: '/productimages/labscale.png', description: 'Precision laboratory instruments' },
-  { id: 7, name: 'Weighing Automation', icon: '🤖', image: '/productimages/wieghingautomation.png', description: 'Automated weighing systems' },
+  { id: 7, name: 'Weighing Automation', icon: '🤖', image: '/productimages/wieghingautomation.png', description: 'Automatic batching, filling and conveyor weighing systems' },
 ]
 
 // Services
@@ -60,7 +60,7 @@ export const SERVICES = [
   { id: 2, title: 'Calibration', icon: '⚙️', description: 'Precision calibration services' },
   { id: 3, title: 'Repair & Maintenance', icon: '🛠️', description: 'Expert repair and maintenance' },
   { id: 4, title: 'AMC (Annual Maintenance)', icon: '📅', description: 'Annual maintenance contracts' },
-  { id: 5, title: 'Automation Solutions', icon: '🤖', description: 'Automated weighing systems' },
+  { id: 5, title: 'Automation Solutions', icon: '🤖', description: 'Automatic batching, filling and conveyor weighing systems' },
   { id: 6, title: 'Technical Support', icon: '💬', description: '24/7 technical support' },
 ]
 

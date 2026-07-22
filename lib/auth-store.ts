@@ -1,11 +1,12 @@
-import { promises as fs } from 'fs'
-import path from 'path'
 import crypto from 'crypto'
+import { getDb } from '@/lib/db'
 
 export type StoredUser = {
   id: string
   name: string
   email: string
+  phone?: string
+  company?: string
   role: 'customer' | 'admin'
   passwordSalt: string
   passwordHash: string
@@ -13,32 +14,11 @@ export type StoredUser = {
   updatedAt: string
 }
 
-type AuthStore = {
-  users: StoredUser[]
-}
-
-const DATA_DIR = path.join(process.cwd(), 'data')
-const STORE_PATH = path.join(DATA_DIR, 'auth-store.json')
-
-async function ensureStore() {
-  await fs.mkdir(DATA_DIR, { recursive: true })
-
-  try {
-    await fs.access(STORE_PATH)
-  } catch {
-    await fs.writeFile(STORE_PATH, JSON.stringify({ users: [] }, null, 2), 'utf8')
-  }
-}
-
-async function readStore(): Promise<AuthStore> {
-  await ensureStore()
-  const raw = await fs.readFile(STORE_PATH, 'utf8')
-  return JSON.parse(raw) as AuthStore
-}
-
-async function writeStore(store: AuthStore) {
-  await ensureStore()
-  await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2), 'utf8')
+async function usersCollection() {
+  const db = await getDb()
+  const users = db.collection<StoredUser>('users')
+  await users.createIndex({ email: 1 }, { unique: true, name: 'users_email_unique' })
+  return users
 }
 
 export function normalizeEmail(email: string) {
@@ -61,6 +41,8 @@ export function toPublicUser(user: StoredUser) {
     id: user.id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    company: user.company,
     role: user.role,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -68,22 +50,47 @@ export function toPublicUser(user: StoredUser) {
 }
 
 export async function findUserByEmail(email: string) {
-  const store = await readStore()
-  return store.users.find((user) => user.email === normalizeEmail(email)) ?? null
+  const users = await usersCollection()
+  return users.findOne({ email: normalizeEmail(email) })
+}
+
+export async function updateUserProfile(
+  id: string,
+  input: { name: string; email: string; phone?: string; company?: string },
+) {
+  const users = await usersCollection()
+  const email = normalizeEmail(input.email)
+  const existing = await users.findOne({ email, id: { $ne: id } })
+
+  if (existing) {
+    throw new Error('Email already exists')
+  }
+
+  const result = await users.findOneAndUpdate(
+    { id },
+    {
+      $set: {
+        name: input.name.trim(),
+        email,
+        phone: input.phone?.trim() || undefined,
+        company: input.company?.trim() || undefined,
+        updatedAt: new Date().toISOString(),
+      },
+    },
+    { returnDocument: 'after' },
+  )
+
+  return result
 }
 
 export async function findUserById(id: string) {
-  const store = await readStore()
-  return store.users.find((user) => user.id === id) ?? null
+  const users = await usersCollection()
+  return users.findOne({ id })
 }
 
 export async function createUser(input: { name: string; email: string; password: string; role?: 'customer' | 'admin' }) {
-  const store = await readStore()
+  const users = await usersCollection()
   const normalizedEmail = normalizeEmail(input.email)
-
-  if (store.users.some((user) => user.email === normalizedEmail)) {
-    throw new Error('Email already exists')
-  }
 
   const now = new Date().toISOString()
   const { salt, hash } = hashPassword(input.password)
@@ -99,8 +106,15 @@ export async function createUser(input: { name: string; email: string; password:
     updatedAt: now,
   }
 
-  store.users.push(user)
-  await writeStore(store)
+  try {
+    await users.insertOne(user)
+  } catch (error) {
+    if (typeof error === 'object' && error && 'code' in error && error.code === 11000) {
+      throw new Error('Email already exists')
+    }
+
+    throw error
+  }
 
   return user
 }

@@ -46,6 +46,10 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
+    if (error instanceof Error && error.message === 'Email already exists') {
+      return NextResponse.json({ success: false, error: error.message }, { status: 409 })
+    }
+
     return NextResponse.json(
       {
         success: false,

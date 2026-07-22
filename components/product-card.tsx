@@ -1,18 +1,19 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { Star, ShoppingCart, Heart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { Star, ShoppingCart, Heart, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
-  id: string
-  name: string
-  price: number
-  image: string
-  rating: number
-  reviews: number
-  discount?: number
-  onAddToCart?: () => void
-  onAddToWishlist?: () => void
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  rating: number;
+  reviews: number;
+  discount?: number;
+  onAddToCart?: () => void;
+  onAddToWishlist?: () => void;
 }
 
 export function ProductCard({
@@ -26,85 +27,142 @@ export function ProductCard({
   onAddToCart,
   onAddToWishlist,
 }: ProductCardProps) {
-  const discountedPrice = discount ? price * (1 - discount / 100) : price
+  const discountedPrice = discount
+    ? price * (1 - discount / 100)
+    : price;
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_45px_-28px_rgba(15,23,42,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_-24px_rgba(15,23,42,0.7)] dark:border-slate-800 dark:bg-slate-900">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_55px_-25px_rgba(15,23,42,.18)] transition-all duration-500 hover:-translate-y-2 hover:border-amber-400 hover:shadow-[0_35px_80px_-20px_rgba(15,23,42,.28)] dark:border-slate-800 dark:bg-slate-900">
+
+     
+
       {/* Product Image */}
-      <Link href={`/store/products/${id}`} className="relative block aspect-[4/3] overflow-hidden bg-slate-50 p-5 dark:bg-slate-800 sm:p-6">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-contain object-center transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 25vw"
-          unoptimized
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-slate-950/5 to-transparent" />
-        {discount && (
-          <div className="absolute left-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-xs font-semibold text-slate-950 shadow-lg shadow-amber-400/30">
-            -{discount}%
-          </div>
-        )}
-        <div className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-900 backdrop-blur dark:bg-slate-900/80 dark:text-white">
-          Featured
-        </div>
-      </Link>
 
-      {/* Product Info */}
-      <div className="space-y-4 p-4 sm:p-5">
-        {/* Product Name */}
-        <Link href={`/store/products/${id}`} className="hover:text-primary transition-colors">
-          <h3 className="line-clamp-2 text-base font-semibold text-slate-900 transition-colors dark:text-white">
-            {name}
-          </h3>
-        </Link>
+<Link
+  href={`/store/products/${id}`}
+  className="relative block overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:to-slate-800"
+>
+  <div className="relative aspect-[4/3]">
+    <Image
+      src={image}
+      alt={name}
+      fill
+      className="object-contain p-8 transition-transform duration-700 group-hover:scale-110"
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+      unoptimized
+    />
+  </div>
 
-        {/* Rating */}
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/15 via-transparent to-transparent" />
+
+  {discount && (
+    <div className="absolute left-4 top-4 rounded-full bg-amber-400 px-3 py-1 text-xs font-bold text-slate-950 shadow-lg">
+      SAVE {discount}%
+    </div>
+  )}
+
+  <div className="absolute right-4 top-4">
+    <button
+      onClick={(event) => {
+        event.preventDefault()
+        onAddToWishlist?.()
+      }}
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-lg backdrop-blur transition hover:bg-white"
+      aria-label="Add to wishlist"
+    >
+      <Heart size={18} />
+    </button>
+  </div>
+</Link>
+
+      {/* Content */}
+
+      <div className="flex flex-1 flex-col p-6">
+
         <div className="flex items-center gap-1">
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={15}
-                className={i < Math.floor(rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}
-              />
-            ))}
-          </div>
-          <span className="ml-1 text-xs text-slate-500 dark:text-slate-400">
+
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              size={15}
+              className={
+                i < Math.floor(rating)
+                  ? "fill-amber-400 text-amber-400"
+                  : "text-slate-300"
+              }
+            />
+          ))}
+
+          <span className="ml-2 text-sm text-slate-500">
             {rating} ({reviews})
           </span>
+
         </div>
 
-        {/* Price */}
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg font-bold text-slate-950 dark:text-white">₹{discountedPrice.toLocaleString('en-IN')}</span>
-          {discount && (
-            <span className="text-sm text-slate-500 line-through dark:text-slate-400">
-              ₹{price.toLocaleString('en-IN')}
-            </span>
-          )}
+        <Link href={`/store/products/${id}`}>
+
+          <h3 className="mt-4 line-clamp-2 text-xl font-bold leading-snug text-slate-900 transition group-hover:text-amber-600 dark:text-white">
+            {name}
+          </h3>
+
+        </Link>
+
+        <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+          High precision industrial weighing equipment built for long-term
+          reliability and accurate performance.
+        </p>
+
+        <div className="mt-6 flex items-end justify-between">
+
+          <div>
+
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              Starting From
+            </p>
+
+            <div className="mt-1 flex items-center gap-2">
+
+              <span className="text-2xl font-black text-slate-900 dark:text-white">
+                ₹{discountedPrice.toLocaleString("en-IN")}
+              </span>
+
+              {discount && (
+                <span className="text-sm text-slate-400 line-through">
+                  ₹{price.toLocaleString("en-IN")}
+                </span>
+              )}
+
+            </div>
+
+          </div>
+
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2 pt-1">
+        <div className="mt-6 flex gap-3">
+
           <Button
             onClick={onAddToCart}
-            className="flex-1 bg-slate-950 text-sm text-white hover:bg-slate-800 dark:bg-primary dark:hover:bg-primary/90"
+            className="flex-1 rounded-full bg-slate-950 text-white hover:bg-slate-800"
           >
-            <ShoppingCart size={16} className="mr-1" />
-            Add
+            <ShoppingCart size={18} className="mr-2" />
+            Add to Cart
           </Button>
-          <Button
-            onClick={onAddToWishlist}
-            variant="outline"
-            size="sm"
-            className="px-3"
-          >
-            <Heart size={16} />
-          </Button>
+
+          <Link href={`/store/products/${id}`}>
+
+            <Button
+              variant="outline"
+              className="rounded-full border-slate-300 px-4 hover:border-amber-400 hover:bg-amber-50"
+            >
+              <ArrowRight size={18} />
+            </Button>
+
+          </Link>
+
         </div>
+
       </div>
+
     </article>
-  )
+  );
 }

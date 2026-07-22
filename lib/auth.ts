@@ -12,7 +12,13 @@ const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
 function getSecret() {
-  return process.env.AUTH_SECRET || 'dev-star-tech-scales-secret-change-me'
+  const secret = process.env.AUTH_SECRET
+
+  if (!secret && process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_SECRET must be configured in production')
+  }
+
+  return secret || 'development-only-star-tech-scales-secret'
 }
 
 function base64UrlEncode(input: ArrayBuffer | Uint8Array | string) {

@@ -18,7 +18,7 @@ export default function AdminDashboard() {
     { href: '/admin/orders', label: 'View Orders', icon: ShoppingCart },
     { href: '/admin/customers', label: 'View Customers', icon: Users },
     { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-    { href: '/admin/coupons', label: 'Manage Coupons', icon: Settings },
+    { href: '/admin/categories', label: 'Manage Categories', icon: Settings },
     { href: '/admin/blogs', label: 'Manage Blogs', icon: Settings },
   ]
 

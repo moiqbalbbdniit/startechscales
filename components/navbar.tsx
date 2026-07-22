@@ -13,6 +13,7 @@ export function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userName, setUserName] = useState('Account')
+  const [userRole, setUserRole] = useState<'customer' | 'admin' | null>(null)
   const pathname = usePathname()
   const router = useRouter()
 
@@ -23,6 +24,7 @@ export function Navbar() {
         if (!response.ok) {
           setIsLoggedIn(false)
           setUserName('Account')
+          setUserRole(null)
           return
         }
 
@@ -30,9 +32,11 @@ export function Navbar() {
         if (data?.user) {
           setIsLoggedIn(true)
           setUserName(data.user.name || 'Account')
+          setUserRole(data.user.role === 'admin' ? 'admin' : 'customer')
         }
       } catch {
         setIsLoggedIn(false)
+        setUserRole(null)
       }
     }
 
@@ -42,6 +46,7 @@ export function Navbar() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     setIsLoggedIn(false)
+    setUserRole(null)
     setIsUserMenuOpen(false)
     router.refresh()
     router.push('/')
@@ -144,6 +149,11 @@ export function Navbar() {
                     <Link href="/dashboard/settings" className="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
                       Settings
                     </Link>
+                    {userRole === 'admin' && (
+                      <Link href="/admin" className="block rounded-xl px-4 py-3 font-semibold text-primary hover:bg-slate-100 dark:hover:bg-slate-800">
+                        Admin Panel
+                      </Link>
+                    )}
                     <div className="my-2 h-px bg-slate-200 dark:bg-slate-800" />
                     <button
                       onClick={handleLogout}
@@ -205,6 +215,11 @@ export function Navbar() {
                   <Link href="/dashboard/orders" className="block rounded-xl px-3 py-3 text-slate-700 dark:text-slate-300">
                     Orders
                   </Link>
+                  {userRole === 'admin' && (
+                    <Link href="/admin" className="block rounded-xl px-3 py-3 font-semibold text-primary">
+                      Admin Panel
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="w-full rounded-xl px-3 py-3 text-left text-slate-700 dark:text-slate-300"

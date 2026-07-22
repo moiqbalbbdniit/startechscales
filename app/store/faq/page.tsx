@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import FAQAccordion from '@/components/faq-accordion'
 import { FAQ } from '@/lib/constants'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'FAQ',

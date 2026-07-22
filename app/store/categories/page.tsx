@@ -1,16 +1,18 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { CategoriesGrid } from '@/components/categories-grid'
 import { ArrowRight } from 'lucide-react'
-import { CATEGORIES } from '@/lib/constants'
+import { getCategories } from '@/lib/category-store'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Categories',
   description: 'Browse our comprehensive range of weighing scale categories and find the perfect solution for your needs.',
 }
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  const categories = await getCategories()
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-black">
       {/* Header */}
@@ -27,7 +29,7 @@ export default function CategoriesPage() {
 
       {/* Categories Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
-        <CategoriesGrid displayCount={7} variant="full" showViewAll={false} />
+        <CategoriesGrid displayCount={categories.length} variant="full" showViewAll={false} categories={categories} />
       </div>
 
       {/* Featured Benefits */}
@@ -73,16 +75,6 @@ export default function CategoriesPage() {
                 key={index}
                 className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_40px_-30px_rgba(15,23,42,0.55)] transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:shadow-[0_24px_50px_-28px_rgba(15,23,42,0.75)] dark:border-slate-700 dark:bg-slate-900"
               >
-                <div className="h-40 overflow-hidden">
-                  <Image
-                    src={CATEGORIES[index % CATEGORIES.length].image || '/placeholder.jpg'}
-                    alt={benefit.title}
-                    width={800}
-                    height={500}
-                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                    unoptimized
-                  />
-                </div>
                 <div className="p-4 sm:p-6">
                 <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-2">
                   {benefit.title}

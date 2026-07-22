@@ -2,7 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
-import { SAMPLE_PRODUCTS, CATEGORIES, SORT_OPTIONS, PRICE_RANGES } from '@/lib/constants'
+import { SAMPLE_PRODUCTS, SORT_OPTIONS, PRICE_RANGES } from '@/lib/constants'
+import { getCategories } from '@/lib/category-store'
 import { Search } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
   description: 'Browse our complete range of industrial weighing scales and precision instruments.',
 }
 
-export default function ProductsPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function ProductsPage() {
+  const categories = await getCategories()
   return (
     <div className="bg-white dark:bg-slate-950">
       {/* Breadcrumb */}
@@ -62,7 +66,7 @@ export default function ProductsPage() {
                   Categories
                 </label>
                 <div className="space-y-2">
-                  {CATEGORIES.slice(0, 5).map((category) => (
+                  {categories.slice(0, 5).map((category) => (
                     <label key={category.id} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"
